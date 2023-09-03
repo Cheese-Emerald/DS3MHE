@@ -1,9 +1,11 @@
 # Dumb S3M Header Editor
 
+A rough header editor for the Scream Tracker 3 module format, written as a for fun project.
+
 ## Compiling
 
 Use your favorite C compiler, or use the MAK (Microsoft Quick C)/PRJ (Borland Turbo C).
-I mainly tested this with Microsoft Quick C, and Borland Turbo C in MS-DOS (via [DOSBox-X](https://dosbox-x.com/)).
+I mainly tested this with Microsoft Quick C/Borland Turbo C in MS-DOS (via [DOSBox-X](https://dosbox-x.com/)/[DOSBox Staging](https://dosbox-staging.github.io/)).
 
 ## Usage
 

@@ -1,6 +1,7 @@
-/*
- * Dumb S3M Header Editor
+/* Dumb S3M Header Editor
  * by RepellantMold (2023)
+ *
+ * Usage: DumbS3MHeaderEditor <filename.s3m>
  */
 
 #include <stdio.h>
@@ -10,15 +11,15 @@
 int main(int argc, char *argv[]) {
 
 	char *header;
-	unsigned char flaggos = 0;
-	unsigned char stereotoggle = 0;
-	unsigned char channelval = 0;
+	char *pantable;
+	unsigned char flaggos, stereotoggle, channelval, answer, i = 0;
 	unsigned short trackerinfo = 0;
-	char answer;
+
+	unsigned char ordcnt, inscnt, patcnt;
 
 	puts("Dumb S3M Header Editor\nby RepellantMold (2023)\n\n");
 
-	if(argc == 2) {
+	if(2 == argc) {
 		FILE *s3m = fopen(argv[1], "rb+");
 		if (s3m == NULL) {
 			puts("Failed to open the file.");
@@ -37,6 +38,10 @@ int main(int argc, char *argv[]) {
 			puts("Not a valid S3M file.");
 			return 2;
 		}
+
+		ordcnt = header[32];
+		inscnt = header[34];
+		patcnt = header[36];
 
 		/* Null terminated string */
 		printf("Song title: %.28s\n", header);
@@ -76,7 +81,10 @@ int main(int argc, char *argv[]) {
 				break;
 
 			case 5:
+				if (header[54] == 0 && header[55] == 0)
 				printf("OpenMPT %1X.%02X\n", header[41] & 0x0F, header[40]);
+				else
+				printf("OpenMPT %1X.%02X.%1X.%1X\n", header[41] & 0x0F, header[40], header[54], header[55]);
 				break;
 
 			case 6:
@@ -110,8 +118,25 @@ int main(int argc, char *argv[]) {
 
 		header[51] = stereotoggle << 7;
 
+		puts("Channel values (decimal):\n"
+		"0-7: Left 1 - 8\n"
+		"8-15: Right 1 - 8\n"
+		"16-24: Adlib Melody 1 - 9\n"
+		"25-29: Adlib Percussion\n"
+		"30-127: Invalid/Garbage\n"
+		"all values above + 128 = disabled\n"
+		"255: Unused channel");
+
+		for (i = 0; i < 32; i++) {
+			printf("Enter the value for channel %02d (decimal):", i + 1);
+			scanf("%hhu", &channelval);
+			header[64 + i] = channelval;
+		}
+
 		fseek(s3m, 0, SEEK_SET);
 		fwrite(header, sizeof(char), 96, s3m);
+
+		free(header);
 
 		fclose(s3m);
 
