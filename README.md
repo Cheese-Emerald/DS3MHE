@@ -4,6 +4,8 @@ A rough header editor for the Scream Tracker 3 module format, written as a for f
 
 ## Compiling
 
+[![Premake compile](https://github.com/RepellantMold/DumbS3MHeaderEditor/actions/workflows/premake.yml/badge.svg?branch=master&event=check_run)](https://github.com/RepellantMold/DumbS3MHeaderEditor/actions/workflows/premake.yml)
+
 You can use [Premake 5](https://premake.github.io/).
 
 ### Manual compiling
