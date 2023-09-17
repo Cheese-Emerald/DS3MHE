@@ -11,11 +11,8 @@
 int main(int argc, char *argv[]) {
 
   char *header;
-  char *pantable;
-  unsigned char flaggos, stereotoggle, channelval, answer, i = 0;
+  unsigned char flaggos, stereotoggle, answer, i = 0;
   unsigned short trackerinfo = 0;
-
-  unsigned char ordcnt, inscnt, patcnt;
 
   puts("Dumb S3M Header Editor\nby RepellantMold (2023)\n\n");
 
@@ -39,10 +36,6 @@ int main(int argc, char *argv[]) {
       puts("Not a valid S3M file.");
       return 2;
     }
-
-    ordcnt = header[32];
-    inscnt = header[34];
-    patcnt = header[36];
 
     /* Null terminated string */
     printf("Song title: %.28s\n", header);
@@ -131,8 +124,7 @@ int main(int argc, char *argv[]) {
 
     for (i = 0; i < 32; i++) {
       printf("Enter the value for channel %02d (decimal):", i + 1);
-      scanf("%hhu", &channelval);
-      header[64 + i] = channelval;
+      scanf("%hhu", &header[64 + i]);
     }
 
     fseek(s3m, 0, SEEK_SET);
