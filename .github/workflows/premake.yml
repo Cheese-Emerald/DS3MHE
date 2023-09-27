@@ -1,37 +1,24 @@
-name: Premake compile
+name: Compile
 
-on:
-  workflow_dispatch:
-    branches: [ "main" ]
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  # a reference to an old OSFirstTimer video
-  build-abunchew:
+  build:
 
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout the repository
-      uses: actions/checkout@v3
-    - name: Run premake '5.0.0-beta1'
-      uses: eariassoto/setup-premake@v1
-      with:
-        version: '5.0.0-beta1'
-        action: 'gmake'
-        options: '--cc=clang'
-
-  build-windows:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v3
-    - name: Run premake '5.0.0-beta1'
-      uses: eariassoto/setup-premake@v1
+    - name: Run premake
+      uses: abel0b/setup-premake@v2.3
       with:
-        version: '5.0.0-beta1'
-        action: 'gmake2'
+        version: '5.0.0-beta2'
+
+    - name: Compile my project
+      run: |
+          premake5 gmake2
+          make
