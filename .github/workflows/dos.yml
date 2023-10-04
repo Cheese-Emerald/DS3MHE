@@ -25,9 +25,15 @@ jobs:
           $/turbo-c++/3.00:c:\tc
         run: |
           c:
-          tcc -mt main.c
+          tcc -mt -lt main.c
 
         conf: |
           [cpu]
           cycles=max
           turbo=true
+
+    - name: 'Upload'
+      uses: actions/upload-artifact@v3.1.3
+      with:
+        name: DOS build
+        path: main.com
