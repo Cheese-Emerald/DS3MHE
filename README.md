@@ -4,13 +4,11 @@ A rough header editor for the Scream Tracker 3 module format, written as a for f
 
 ## Compiling
 
-[![Premake compile](https://github.com/RepellantMold/DumbS3MHeaderEditor/actions/workflows/premake.yml/badge.svg?branch=master&event=check_run)](https://github.com/RepellantMold/DumbS3MHeaderEditor/actions/workflows/premake.yml)
-
-You can use [Premake 5](https://premake.github.io/).
+You can use CMake, or compiling it yourself.
 
 ### Manual compiling
 
-Use your favorite C compiler, or use the MAK (Microsoft Quick C)/PRJ (Borland Turbo C).
+Use your favorite C compiler.
 I mainly tested this with Microsoft Quick C/Borland Turbo C in MS-DOS (via [DOSBox-X](https://dosbox-x.com/)/[DOSBox Staging](https://dosbox-staging.github.io/)).
 
 ## Usage
