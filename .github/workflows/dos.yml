@@ -1,0 +1,33 @@
+# based off https://github.com/joncloud/got/blob/main/.github/workflows/main.yml
+name: DOS build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  dos:
+    runs-on: 'ubuntu-22.04'
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: 'Setup environment'
+      run: sudo snap install dosbox-x
+
+    - name: 'Compile'
+      uses: 'joncloud/dos-build-action@main'
+      timeout-minutes: 2
+      with:
+        programs: |
+          $/turbo-c++/3.00:c:\tc
+        run: |
+          c:
+          tcc -mt main.c
+
+        conf: |
+          [cpu]
+          cycles=max
+          turbo=true
