@@ -12,7 +12,7 @@
 int
 main(int argc, char* argv[]) {
 
-    char* header;
+    unsigned char header[96] = {0};
     unsigned char flaggos, stereotoggle, i = 0;
     unsigned short trackerinfo = 0;
 
@@ -23,12 +23,6 @@ main(int argc, char* argv[]) {
         if (s3m == NULL) {
             puts("Failed to open the file.");
             return 1;
-        }
-
-        header = (char*)calloc(96, sizeof(char));
-        if (header == NULL) {
-            puts("Failed to allocate memory!");
-            return 2;
         }
 
         fread(header, sizeof(char), 96, s3m);
@@ -120,10 +114,8 @@ main(int argc, char* argv[]) {
             scanf("%hhu", &header[64 + i]);
         }
 
-        fseek(s3m, 0, SEEK_SET);
+        rewind(s3m);
         fwrite(header, sizeof(char), 96, s3m);
-
-        free(header);
 
         fclose(s3m);
 
