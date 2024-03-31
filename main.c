@@ -30,7 +30,7 @@ main(int argc, char* argv[]) {
                 return 1;
             }
 
-            (void)fread(header, sizeof(char), sizeof(header), s3m);
+            (void)!fread(header, sizeof(char), sizeof(header), s3m);
 
             if (check_s3m_header(header)) {
                 puts("Not a valid S3M file.");
@@ -93,44 +93,44 @@ check_s3m_tracker_version(unsigned char* header) {
 
     trackerinfo = ((header[41] << 8) + header[40]);
 
-    (void)printf("Tracker info: %04X, which translates to...\n", trackerinfo);
+    (void)!printf("Tracker info: %04X, which translates to...\n", trackerinfo);
 
     /* (not really going to be sophisticated with this) */
     switch (header[41] >> 4) {
         default:
             if (trackerinfo == 0xCA00) {
-                (void)puts("Camoto / libgamemusic");
+                (void)!puts("Camoto / libgamemusic");
             } else if (trackerinfo == 0x0208) {
-                (void)puts("Polish localized Squeak Tracker");
+                (void)!puts("Polish localized Squeak Tracker");
             } else if (trackerinfo == 0x5447) {
-                (void)puts("Graoumf Tracker");
+                (void)!puts("Graoumf Tracker");
             } else {
-                (void)puts("Unknown");
+                (void)!puts("Unknown");
             }
             break;
 
         case 1:
-            (void)printf("Scream Tracker 3.%02X\n", header[40]);
-            (void)puts("(could be disguised...)");
+            (void)!printf("Scream Tracker 3.%02X\n", header[40]);
+            (void)!puts("(could be disguised...)");
             break;
 
-        case 2: (void)printf("Imago Orpheus %1X.%02X\n", header[41] & 0x0F, header[40]); break;
+        case 2: (void)!printf("Imago Orpheus %1X.%02X\n", header[41] & 0x0F, header[40]); break;
 
-        case 3: (void)printf("Impulse Tracker %1X.%02X\n", header[41] & 0x0F, header[40]); break;
+        case 3: (void)!printf("Impulse Tracker %1X.%02X\n", header[41] & 0x0F, header[40]); break;
 
-        case 4: (void)printf("Schism Tracker %1X.%02X\n", header[41] & 0x0F, header[40]); break;
+        case 4: (void)!printf("Schism Tracker %1X.%02X\n", header[41] & 0x0F, header[40]); break;
 
         case 5:
             if (header[54] == 0 && header[55] == 0) {
-                (void)printf("OpenMPT %1X.%02X\n", header[41] & 0x0F, header[40]);
+                (void)!printf("OpenMPT %1X.%02X\n", header[41] & 0x0F, header[40]);
             } else {
-                (void)printf("OpenMPT %1X.%02X.%1X.%1X\n", header[41] & 0x0F, header[40], header[54], header[55]);
+                (void)!printf("OpenMPT %1X.%02X.%1X.%1X\n", header[41] & 0x0F, header[40], header[54], header[55]);
             }
             break;
 
-        case 6: (void)printf("BeRo Tracker %1X.%02X\n", header[41] & 0x0F, header[40]); break;
+        case 6: (void)!printf("BeRo Tracker %1X.%02X\n", header[41] & 0x0F, header[40]); break;
 
-        case 7: (void)printf("CreamTracker %1X.%02X\n", header[41] & 0x0F, header[40]); break;
+        case 7: (void)!printf("CreamTracker %1X.%02X\n", header[41] & 0x0F, header[40]); break;
     }
 }
 
@@ -153,8 +153,8 @@ handle_s3m_channels(unsigned char* header) {
          "255: Unused channel");
 
     for (i = 0; i < 32; i++) {
-        (void)printf("Enter the value for channel %02d (decimal):", (unsigned char)i + 1);
-        if(scanf("%3d", &a) == 1)
+        (void)!printf("Enter the value for channel %02d (decimal):", (unsigned char)i + 1);
+        if(scanf("%3u", &a) == 1)
             header[64 + i] = a;
         else continue;
     }
@@ -168,7 +168,7 @@ handle_s3m_flags(unsigned char* header) {
         return;
     }
 
-    (void)puts("\nThe bit meanings for the song flags (hex):\n"
+    (void)!puts("\nThe bit meanings for the song flags (hex):\n"
          "0 (+1): ST2 vibrato (deprecated)\n"
          "1 (+2): ST2 tempo (deprecated)\n"
          "2 (+4): Amiga slides (deprecated)\n"
@@ -192,7 +192,7 @@ handle_stereo_toggle(unsigned char* header) {
         return;
     }
 
-    (void)puts("Would you like the song to be in stereo (1) or mono (0)?");
+    (void)!puts("Would you like the song to be in stereo (1) or mono (0)?");
     if (scanf("%1u", &stereotoggle) == 1)
         header[51] |= stereotoggle << 7;
     else return;
