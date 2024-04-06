@@ -23,45 +23,11 @@ main(int argc, char* argv[]) {
     puts("Dumb S3M Header Editor\nby RepellantMold (2023, 2024)\n\n");
 
     switch (argc) {
-        case 2:
-            s3m = fopen(argv[1], "rb+");
-            if (s3m == NULL) {
-                perror("Failed to open the file");
-                return 1;
-            }
-
-            (void)!fread(header, sizeof(char), sizeof(header), s3m);
-
-            if (check_s3m_header(header)) {
-                puts("Not a valid S3M file.");
-                return 2;
-            }
-
-            /* Null terminated string */
-            printf("Song title: %.28s\n", header);
-
-            check_s3m_tracker_version(header);
-
-            handle_s3m_flags(header);
-
-            handle_stereo_toggle(header);
-
-            handle_s3m_channels(header);
-
-            rewind(s3m);
-
-            fwrite(header, sizeof(char), sizeof(header), s3m);
-
-            fclose(s3m);
-
-            puts("Done!");
-
-            return 0;
-            break;
+        case 2: break;
 
         case 0:
         case 1:
-            puts("Expected usage: DumbS3MHeaderEditor <filename.s3m>");
+            printf("Expected usage: %s <filename.s3m>", argv[0]);
             return 1;
             break;
 
@@ -70,6 +36,40 @@ main(int argc, char* argv[]) {
             return 1;
             break;
     }
+
+    s3m = fopen(argv[1], "rb+");
+    if (s3m == NULL) {
+        perror("Failed to open the file");
+        return 1;
+    }
+
+    (void)!fread(header, sizeof(char), sizeof(header), s3m);
+
+    if (check_s3m_header(header)) {
+        puts("Not a valid S3M file.");
+        return 2;
+    }
+
+    /* Null terminated string */
+    printf("Song title: %.28s\n", header);
+
+    check_s3m_tracker_version(header);
+
+    handle_s3m_flags(header);
+
+    handle_stereo_toggle(header);
+
+    handle_s3m_channels(header);
+
+    rewind(s3m);
+
+    fwrite(header, sizeof(char), sizeof(header), s3m);
+
+    fclose(s3m);
+
+    puts("Done!");
+
+    return 0;
 }
 
 int
@@ -91,7 +91,7 @@ check_s3m_tracker_version(unsigned char* header) {
         return;
     }
 
-    trackerinfo = ((header[41] << 8) + header[40]);
+    trackerinfo = ((header[41] << 8) | header[40]);
 
     (void)!printf("Tracker info: %04X, which translates to...\n", trackerinfo);
 
@@ -154,9 +154,11 @@ handle_s3m_channels(unsigned char* header) {
 
     for (i = 0; i < 32; i++) {
         (void)!printf("Enter the value for channel %02d (decimal):", (unsigned char)i + 1);
-        if(scanf("%3u", &a) == 1)
+        if (scanf("%3u", &a) == 1) {
             header[64 + i] = (unsigned char)a;
-        else continue;
+        } else {
+            continue;
+        }
     }
 }
 
@@ -169,19 +171,21 @@ handle_s3m_flags(unsigned char* header) {
     }
 
     (void)!puts("\nThe bit meanings for the song flags (hex):\n"
-         "0 (+1): ST2 vibrato (deprecated)\n"
-         "1 (+2): ST2 tempo (deprecated)\n"
-         "2 (+4): Amiga slides (deprecated)\n"
-         "3 (+8): 0-vol optimizations\n"
-         "4 (+10): Enforce Amiga limits\n"
-         "5 (+20): Enable SoundBlaster filter/FX (deprecated)\n"
-         "6 (+40): Fast volume slides\n"
-         "7 (+80): Pointer to special data is valid\n\n"
-         "Enter your new value (hexadecimal):");
+                "0 (+1): ST2 vibrato (deprecated)\n"
+                "1 (+2): ST2 tempo (deprecated)\n"
+                "2 (+4): Amiga slides (deprecated)\n"
+                "3 (+8): 0-vol optimizations\n"
+                "4 (+10): Enforce Amiga limits\n"
+                "5 (+20): Enable SoundBlaster filter/FX (deprecated)\n"
+                "6 (+40): Fast volume slides\n"
+                "7 (+80): Pointer to special data is valid\n\n"
+                "Enter your new value (hexadecimal):");
 
-    if (scanf("%2X", &flaggos) == 1)
-        header[38] = flaggos;
-    else return;
+    if (scanf("%2X", &flaggos) == 1) {
+        header[38] = (unsigned char)flaggos;
+    } else {
+        return;
+    }
 }
 
 void
@@ -193,7 +197,9 @@ handle_stereo_toggle(unsigned char* header) {
     }
 
     (void)!puts("Would you like the song to be in stereo (1) or mono (0)?");
-    if (scanf("%1u", &stereotoggle) == 1)
-        header[51] |= stereotoggle << 7;
-    else return;
+    if (scanf("%1u", &stereotoggle) == 1) {
+        header[51] |= (unsigned char)stereotoggle << 7;
+    } else {
+        return;
+    }
 }
