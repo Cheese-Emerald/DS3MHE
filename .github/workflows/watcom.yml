@@ -1,0 +1,18 @@
+name: Watcom build
+
+on:
+  [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: open-watcom/setup-watcom@v0
+      with:
+        version: "2.0"
+    - run: |
+        cmake -S . -B build -G "Watcom WMake" -D CMAKE_SYSTEM_NAME=DOS
+        cmake --build build
