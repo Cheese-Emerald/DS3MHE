@@ -155,7 +155,7 @@ handle_s3m_channels(unsigned char* header) {
     for (i = 0; i < 32; i++) {
         (void)!printf("Enter the value for channel %02d (decimal):", (unsigned char)i + 1);
         if(scanf("%3u", &a) == 1)
-            header[64 + i] = a;
+            header[64 + i] = (unsigned char)a;
         else continue;
     }
 }
